@@ -1,29 +1,13 @@
-import { Controller, Get, Module, Injectable } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
+import { AppModule } from "./app.module";
 
-@Injectable()
-class AppService {
-  generateMessage(): string {
-    return "Hello World";
-  }
-}
+// Service that gives a list of quotes back as json
+// Service that gives a single quote back as json
 
-@Controller()
-class AppController {
-  constructor(private readonly appService: AppService) {}
+// Controller for a Route that returns a random quote
+// Controller for a Route that returns all quotes
 
-  @Get("/")
-  showHello() {
-    return this.appService.generateMessage();
-  }
-}
-
-@Module({
-  controllers: [AppController],
-  providers: [AppService],
-})
-class AppModule {}
-
+// basic server functionality
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   await app.listen(3232);
