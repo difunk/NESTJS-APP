@@ -12,11 +12,11 @@ export class QuotesController {
 
   @Get("/randomQuote")
   async showRandomQuote() {
-    return await this.quotesService.getRandomQuote();
+    return await this.quotesService.getRandomQuoteFromDB();
   }
 
   @Get("/allQuotes")
   showAllQuotes() {
-    return this.quotesService.getAllQuotes();
+    return this.quotesService.getAllQuotesFromDB();
   }
 }

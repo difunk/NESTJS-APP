@@ -4,7 +4,15 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "ts-node ./src/main.ts"
+    "build": "tsc",
+    "start:dev": "ts-node ./src/main.ts",
+    "cli:generate": "nest generate",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/data-source.ts",
+    "migration:create": "npm run typeorm -- migration:create",
+    "migration:generate": "npm run build && npm run typeorm -- migration:generate",
+    "migration:run": "npm run typeorm -- migration:run",
+    "migration:revert": "npm run typeorm -- migration:revert",
+    "migration:show": "npm run typeorm -- migration:show"
   },
   "keywords": [],
   "author": "",
@@ -13,11 +21,16 @@
   "dependencies": {
     "@nestjs/common": "^11.1.5",
     "@nestjs/core": "^11.1.5",
-    "@nestjs/platform-express": "^11.1.5"
+    "@nestjs/platform-express": "^11.1.5",
+    "@nestjs/typeorm": "^11.0.0",
+    "reflect-metadata": "^0.2.2",
+    "sqlite3": "^5.1.7",
+    "typeorm": "^0.3.25"
   },
   "devDependencies": {
     "@types/node": "^24.1.0",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.8.3"
   }
 }
