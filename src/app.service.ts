@@ -6,6 +6,6 @@ export class AppService {
   constructor(private readonly quotesService: QuotesService) {}
 
   generateMessage(): string {
-    return "My Quote: " + this.quotesService.generateQuote();
+    return "My Quote: ";
   }
 }
