@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Query,
 } from "@nestjs/common";
 import { QuotesService } from "./quotes.service";
 import { Quote } from "./quote.entity";
@@ -14,21 +15,29 @@ import { QuoteDto } from "./dto/quote.dto";
 
 @Controller()
 export class QuotesController {
-  constructor(private readonly quotesService: QuotesService) {}
+  constructor(private readonly quotesService: QuotesService) { }
+  static DEFAULT_PAGE_SIZE = 3
 
   @Get("/randomQuote")
   async showRandomQuote() {
-    return await this.quotesService.getRandomQuoteFromDB();
+    return await this.quotesService.getRandomQuote();
   }
 
   @Get("/allQuotes")
-  async showAllQuotes() {
-    return await this.quotesService.getAllQuotesFromDB();
+  async showAllQuotes(
+    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
+    @Query('pageSize', new ParseIntPipe({ optional: true })) pageSize?: number
+  ) {
+    if (page !== undefined && pageSize === undefined) {
+      pageSize = QuotesController.DEFAULT_PAGE_SIZE
+    }
+
+    return await this.quotesService.getAllQuotes({ page, pageSize });
   }
 
   @Get("/quote/:id")
   async getQuoteById(@Param("id") id: number) {
-    return await this.quotesService.getQuoteByIdFromDB(id);
+    return await this.quotesService.getQuoteById(id);
   }
 
   @Post("/generateQuote")

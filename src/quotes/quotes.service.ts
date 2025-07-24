@@ -3,15 +3,17 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { readFile } from "fs/promises";
 import * as path from "path";
 import { Quote } from "./quote.entity";
-import { Repository } from "typeorm";
+import { FindManyOptions, Repository } from "typeorm";
 import { QuoteDto } from "./dto/quote.dto";
+
+
 
 @Injectable()
 export class QuotesService {
   constructor(
     @InjectRepository(Quote)
     private quoteRepository: Repository<Quote>
-  ) {}
+  ) { }
 
   async createQuote(draftQuote: Omit<Quote, "id">): Promise<Quote> {
     // const result = await this.quoteRepository
@@ -33,15 +35,21 @@ export class QuotesService {
     return await this.quoteRepository.save(draftQuote);
   }
 
-  async getQuoteByIdFromDB(id: number): Promise<Quote | undefined> {
+  async getQuoteById(id: number): Promise<Quote | null> {
     return await this.quoteRepository.findOne({ where: { id } });
   }
 
-  async getAllQuotesFromDB(): Promise<Quote[]> {
-    return await this.quoteRepository.find();
+  async getAllQuotes(options: { page?: number, pageSize?: number }): Promise<Quote[]> {
+    let { page, pageSize } = options
+
+    let findOptions: FindManyOptions = {
+      take: pageSize,
+      skip: page !== undefined && pageSize !== undefined ? (page - 1) * pageSize : undefined
+    }
+    return await this.quoteRepository.find(findOptions);
   }
 
-  async getRandomQuoteFromDB(): Promise<Quote> {
+  async getRandomQuote(): Promise<Quote> {
     const allQuotes = await this.quoteRepository.find();
     return allQuotes[Math.floor(Math.random() * allQuotes.length)];
   }
