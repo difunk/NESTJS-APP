@@ -4,6 +4,7 @@ import { AppService } from "./app.service";
 import { QuoteModule } from "./quotes/quotes.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Quote } from "./quotes/quote.entity";
+import { UsersModule } from './users/users.module';
 
 @Module({
   controllers: [AppController],
@@ -19,6 +20,7 @@ import { Quote } from "./quotes/quote.entity";
       migrationsRun: false, // Set to true if you want migrations to run on app start (careful in prod!)
       logging: ["query", "error"],
     }),
+    UsersModule,
   ],
 })
 export class AppModule {}
