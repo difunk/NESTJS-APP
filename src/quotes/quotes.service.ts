@@ -6,14 +6,12 @@ import { Quote } from "./quote.entity";
 import { FindManyOptions, Repository } from "typeorm";
 import { QuoteDto } from "./dto/quote.dto";
 
-
-
 @Injectable()
 export class QuotesService {
   constructor(
     @InjectRepository(Quote)
     private quoteRepository: Repository<Quote>
-  ) { }
+  ) {}
 
   async createQuote(draftQuote: Omit<Quote, "id">): Promise<Quote> {
     // const result = await this.quoteRepository
@@ -39,19 +37,42 @@ export class QuotesService {
     return await this.quoteRepository.findOne({ where: { id } });
   }
 
-  async getAllQuotes(options: { page?: number, pageSize?: number }): Promise<Quote[]> {
-    let { page, pageSize } = options
+  async getAllQuotes(options: {
+    page?: number;
+    pageSize?: number;
+  }): Promise<Quote[]> {
+    let { page, pageSize } = options;
 
     let findOptions: FindManyOptions = {
       take: pageSize,
-      skip: page !== undefined && pageSize !== undefined ? (page - 1) * pageSize : undefined
-    }
+      skip:
+        page !== undefined && pageSize !== undefined
+          ? (page - 1) * pageSize
+          : undefined,
+    };
     return await this.quoteRepository.find(findOptions);
   }
 
-  async getRandomQuote(): Promise<Quote> {
-    const allQuotes = await this.quoteRepository.find();
-    return allQuotes[Math.floor(Math.random() * allQuotes.length)];
+  async getRandomQuote(options: { limit?: number }): Promise<Quote[]> {
+    const quoteCount = await this.quoteRepository.count();
+    const limit = Math.min(options.limit ?? 1, quoteCount);
+    const quotes: Quote[] = [];
+    const indexSet = new Set<number>();
+
+    while (indexSet.size < limit) {
+      const randomIndex = Math.floor(Math.random() * quoteCount);
+      indexSet.add(randomIndex);
+    }
+
+    for (const skip of indexSet) {
+      const entries = await this.quoteRepository.find({
+        take: 1,
+        skip,
+      });
+      quotes.push(entries[0]);
+    }
+
+    return quotes;
   }
 
   async updateQuote(id: number, updateData: QuoteDto): Promise<Quote | null> {
