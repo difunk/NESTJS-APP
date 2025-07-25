@@ -3,6 +3,9 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
+  NotFoundException,
   Param,
   ParseIntPipe,
   Post,
@@ -15,7 +18,7 @@ import { QuoteDto } from "./dto/quote.dto";
 
 @Controller("quotes")
 export class QuotesController {
-  constructor(private readonly quotesService: QuotesService) {}
+  constructor(private readonly quotesService: QuotesService) { }
   static DEFAULT_PAGE_SIZE = 3;
 
   @Get("/random")
@@ -43,6 +46,7 @@ export class QuotesController {
   }
 
   @Post("/")
+  @HttpCode(HttpStatus.CREATED)
   async generateQuote(@Body() body: QuoteDto): Promise<Quote> {
     return await this.quotesService.createQuote(body);
   }
@@ -56,7 +60,11 @@ export class QuotesController {
   }
 
   @Delete("/:id")
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteQuote(@Param("id", ParseIntPipe) id: number): Promise<void> {
-    return await this.quotesService.deleteQuote(id);
+    const success = await this.quotesService.deleteQuote(id);
+    if (!success) {
+      throw new NotFoundException(`Quote with ID ${id} not found.`);
+    }
   }
 }

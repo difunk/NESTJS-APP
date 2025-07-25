@@ -81,11 +81,8 @@ export class QuotesService {
     return updatedQuote ?? null;
   }
 
-  async deleteQuote(id: number): Promise<void> {
+  async deleteQuote(id: number): Promise<boolean> {
     const result = await this.quoteRepository.delete(id);
-
-    if (result.affected === 0) {
-      throw new NotFoundException(`Quote with ID ${id} not found.`);
-    }
+    return result.affected > 0
   }
 }
