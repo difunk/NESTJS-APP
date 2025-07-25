@@ -13,19 +13,19 @@ import { QuotesService } from "./quotes.service";
 import { Quote } from "./quote.entity";
 import { QuoteDto } from "./dto/quote.dto";
 
-@Controller()
+@Controller("quotes")
 export class QuotesController {
   constructor(private readonly quotesService: QuotesService) {}
   static DEFAULT_PAGE_SIZE = 3;
 
-  @Get("/randomQuote")
+  @Get("/random")
   async showRandomQuote(
     @Query("limit", new ParseIntPipe({ optional: true })) limit?: number
   ) {
     return await this.quotesService.getRandomQuote({ limit });
   }
 
-  @Get("/allQuotes")
+  @Get("/")
   async showAllQuotes(
     @Query("page", new ParseIntPipe({ optional: true })) page?: number,
     @Query("pageSize", new ParseIntPipe({ optional: true })) pageSize?: number
@@ -37,17 +37,17 @@ export class QuotesController {
     return await this.quotesService.getAllQuotes({ page, pageSize });
   }
 
-  @Get("/quote/:id")
+  @Get("/:id")
   async getQuoteById(@Param("id") id: number) {
     return await this.quotesService.getQuoteById(id);
   }
 
-  @Post("/generateQuote")
+  @Post("/")
   async generateQuote(@Body() body: QuoteDto): Promise<Quote> {
     return await this.quotesService.createQuote(body);
   }
 
-  @Put("/quote/:id")
+  @Put("/:id")
   async updateQuote(
     @Body() updateData: QuoteDto,
     @Param("id") id: number
@@ -55,7 +55,7 @@ export class QuotesController {
     return await this.quotesService.updateQuote(id, updateData);
   }
 
-  @Delete("/quote/:id")
+  @Delete("/:id")
   async deleteQuote(@Param("id", ParseIntPipe) id: number): Promise<void> {
     return await this.quotesService.deleteQuote(id);
   }

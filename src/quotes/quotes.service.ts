@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { readFile } from "fs/promises";
 import * as path from "path";
@@ -41,9 +41,9 @@ export class QuotesService {
     page?: number;
     pageSize?: number;
   }): Promise<Quote[]> {
-    let { page, pageSize } = options;
+    const { page, pageSize } = options;
 
-    let findOptions: FindManyOptions = {
+    const findOptions: FindManyOptions = {
       take: pageSize,
       skip:
         page !== undefined && pageSize !== undefined
@@ -82,10 +82,10 @@ export class QuotesService {
   }
 
   async deleteQuote(id: number): Promise<void> {
-    console.log(id, typeof id);
-    if (typeof id !== "number") {
-      throw new Error("ID must be number");
+    const result = await this.quoteRepository.delete(id);
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`Quote with ID ${id} not found.`);
     }
-    await this.quoteRepository.delete(id);
   }
 }
