@@ -11,14 +11,16 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from "@nestjs/common";
 import { QuotesService } from "./quotes.service";
 import { Quote } from "./quote.entity";
 import { QuoteDto } from "./dto/quote.dto";
+import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 
 @Controller("quotes")
 export class QuotesController {
-  constructor(private readonly quotesService: QuotesService) { }
+  constructor(private readonly quotesService: QuotesService) {}
   static DEFAULT_PAGE_SIZE = 3;
 
   @Get("/random")
@@ -45,12 +47,14 @@ export class QuotesController {
     return await this.quotesService.getQuoteById(id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post("/")
   @HttpCode(HttpStatus.CREATED)
   async generateQuote(@Body() body: QuoteDto): Promise<Quote> {
     return await this.quotesService.createQuote(body);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put("/:id")
   async updateQuote(
     @Body() updateData: QuoteDto,
@@ -59,6 +63,7 @@ export class QuotesController {
     return await this.quotesService.updateQuote(id, updateData);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete("/:id")
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteQuote(@Param("id", ParseIntPipe) id: number): Promise<void> {

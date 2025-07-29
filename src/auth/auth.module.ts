@@ -6,6 +6,9 @@ import { AuthController } from "./auth.controller";
 import { UsersModule } from "../users/users.module"; // Import your UsersModule
 import { JwtStrategy } from "./jwt.strategy"; // We'll create this next
 import { LocalStrategy } from "./local.strategy"; // We'll create this for login
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 @Module({
   imports: [
@@ -13,7 +16,7 @@ import { LocalStrategy } from "./local.strategy"; // We'll create this for login
     PassportModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET || "your_secret_key", // USE A STRONG, ENVIRONMENTAL VARIABLE!
-      signOptions: { expiresIn: "60s" }, // Token expiration (e.g., 60 seconds)
+      signOptions: { expiresIn: "60000s" }, // Token expiration (e.g., 60 seconds)
     }),
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy], // Add your strategies

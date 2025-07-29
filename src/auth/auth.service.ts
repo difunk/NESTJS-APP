@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { UsersService } from "../users/users.service"; // Adjust path if needed
-import * as bcrypt from "bcrypt"; // For password comparison
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class AuthService {
@@ -22,7 +22,7 @@ export class AuthService {
 
   async login(user: any) {
     const payload = {
-      username: user.username,
+      username: user.name,
       sub: user.id,
       roles: user.roles,
     }; // Customize payload with user data
