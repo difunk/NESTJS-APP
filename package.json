@@ -2,8 +2,10 @@
   "name": "nestjs-app",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint \"src/**/*.ts\"",
+    "test": "jest",
     "build": "tsc",
     "start:dev": "ts-node ./src/main.ts",
     "dev": "nodemon",
@@ -44,8 +46,15 @@
     "typeorm": "^0.3.25"
   },
   "devDependencies": {
+    "@nestjs/testing": "^11.1.5",
+    "@types/jest": "^30.0.0",
     "@types/node": "^24.1.0",
     "@types/passport-jwt": "^4.0.1",
+    "@typescript-eslint/eslint-plugin": "^8.38.0",
+    "@typescript-eslint/parser": "^8.38.0",
+    "eslint": "^9.32.0",
+    "jest": "^30.0.5",
+    "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.8.3"
