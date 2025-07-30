@@ -8,4 +8,8 @@ export class AppService {
   generateMessage(): string {
     return "My Quote: ";
   }
+
+  helloWorld(): string {
+    return "Hello World";
+  }
 }

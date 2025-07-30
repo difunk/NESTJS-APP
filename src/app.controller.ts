@@ -1,4 +1,4 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, Query, Param } from "@nestjs/common";
 import { AppService } from "./app.service";
 
 @Controller()
@@ -8,5 +8,13 @@ export class AppController {
   @Get("/")
   showHello() {
     return this.appService.generateMessage();
+  }
+
+  @Get("/hello")
+  helloWorld(@Query("name") name?: string) {
+    if (name) {
+      return `Hello, ${name}!`;
+    }
+    return this.appService.helloWorld();
   }
 }

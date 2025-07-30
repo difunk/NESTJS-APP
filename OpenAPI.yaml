@@ -1,0 +1,105 @@
+openapi: 3.0.0
+info:
+  title: Quote API
+  version: 1.0.0
+  description: API with hello and user endpoints, authentication and error handling
+servers:
+  - url: http://localhost:3232
+paths:
+  /hello:
+    get:
+      summary: Returns a hello message
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+          required: false
+          description: Name to greet
+      responses:
+        "200":
+          description: Returns "Hello, world!" oder "Hello, {name}!"
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Hello, Dirk!
+  /users:
+    post:
+      summary: Create user with name and email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          description: Returns created user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+  /users/{id}:
+    get:
+      summary: Gets user with specific id
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Returns user with specific id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - name
+        - email
+      example:
+        name: Dirk
+        email: max3@example.com
+        password: geheimespasswort
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        error:
+          type: string
+        statusCode:
+          type: integer
+      example:
+        message: Validation failed
+        error: Bad Request
+        statusCode: 400

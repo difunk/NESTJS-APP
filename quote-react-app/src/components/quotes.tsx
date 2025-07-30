@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import type { Quotes } from "../types/Quote";
+import type { Quotes } from "../types/quote";
 
 const QuotesComponent = () => {
   const [quotes, setQuotes] = useState<Quotes>([]);
