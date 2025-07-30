@@ -1,7 +1,6 @@
 import { useState } from "react";
 import "./App.css";
 import LoginComponent from "./components/login";
-import QuotesComponent from "./components/quotes";
 import AdminComponent from "./components/admin";
 
 function App() {
@@ -10,7 +9,7 @@ function App() {
   return (
     <>
       <h1>Token: {token}</h1>
-      {/* <QuotesComponent /> */}
+
       {token ? (
         <AdminComponent accessToken={token} />
       ) : (

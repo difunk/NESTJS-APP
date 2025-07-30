@@ -18,7 +18,7 @@ const AdminComponent: React.FC<AdminProps> = ({ accessToken }) => {
     };
 
     fetchData();
-  }, []);
+  }, [accessToken]);
 
   return (
     <>

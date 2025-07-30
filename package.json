@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint \"src/**/*.ts\"",
     "test": "jest",
-    "build": "tsc",
+    "build": "tsc && npm run build --prefix quote-react-app",
     "start:dev": "ts-node ./src/main.ts",
     "dev": "nodemon",
     "cli:generate": "nest generate",
