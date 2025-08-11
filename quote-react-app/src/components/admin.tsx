@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState, useCallback } from "react";
 import type { Users } from "../types/user";
 import type { Quotes } from "../types/quote";
+import { API_BASE_URL } from "../config/api";
 
 type AdminProps = {
   accessToken: string;
@@ -32,7 +33,7 @@ const AdminComponent: React.FC<AdminProps> = ({ accessToken }) => {
   const fetchUsers = useCallback(async () => {
     try {
       setIsLoading(true);
-      const usersResult = await axios.get("http://localhost:3232/users", {
+      const usersResult = await axios.get(`${API_BASE_URL}/users`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       setUsers(usersResult.data);
@@ -46,7 +47,7 @@ const AdminComponent: React.FC<AdminProps> = ({ accessToken }) => {
   const fetchQuotes = useCallback(async () => {
     try {
       setIsLoading(true);
-      const quotesResult = await axios.get("http://localhost:3232/quotes");
+      const quotesResult = await axios.get(`${API_BASE_URL}/quotes`);
       setQuotes(quotesResult.data);
     } catch {
       setError("Failed to fetch quotes");
@@ -58,7 +59,7 @@ const AdminComponent: React.FC<AdminProps> = ({ accessToken }) => {
   const handleCreateQuote = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:3232/quotes", newQuote, {
+      await axios.post(`${API_BASE_URL}/quotes`, newQuote, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
@@ -81,7 +82,7 @@ const AdminComponent: React.FC<AdminProps> = ({ accessToken }) => {
     if (!confirm("Are you sure you want to delete this quote?")) return;
 
     try {
-      await axios.delete(`http://localhost:3232/quotes/${id}`, {
+      await axios.delete(`${API_BASE_URL}/quotes/${id}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       fetchQuotes();
@@ -104,16 +105,12 @@ const AdminComponent: React.FC<AdminProps> = ({ accessToken }) => {
     if (!editingQuote) return;
 
     try {
-      await axios.put(
-        `http://localhost:3232/quotes/${editingQuote}`,
-        editQuoteData,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      await axios.put(`${API_BASE_URL}/quotes/${editingQuote}`, editQuoteData, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       setEditingQuote(null);
       setEditQuoteData({

@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { API_BASE_URL } from "../config/api";
 
 type LoginProps = {
   setToken: React.Dispatch<React.SetStateAction<string | null>>;
@@ -17,7 +18,7 @@ const LoginComponent: React.FC<LoginProps> = ({ setToken }) => {
     setError("");
 
     try {
-      const response = await axios.post("http://localhost:3232/auth/login", {
+      const response = await axios.post(`${API_BASE_URL}/auth/login`, {
         email,
         password,
       });
