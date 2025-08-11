@@ -6,23 +6,36 @@ import * as dotenv from "dotenv"; // If you're using .env files for config
 
 dotenv.config(); // Load environment variables from .env
 
-export const dataSourceOptions: DataSourceOptions = {
-  type: (process.env.DB_TYPE || "sqlite") as any, // Cast to any because TypeORM types are strict
-  host: process.env.DB_HOST || "localhost",
-  port: parseInt(process.env.DB_PORT || "5432", 10),
-  username: process.env.DB_USERNAME || "user",
-  password: process.env.DB_PASSWORD || "password",
-  database: process.env.DB_NAME || "database.sqlite", // For sqlite, this is the file path
+console.log("NODE_ENV:", process.env.NODE_ENV);
+console.log("DATABASE_URL exists:", !!process.env.DATABASE_URL);
+console.log(
+  "Using production config:",
+  process.env.NODE_ENV === "production" && process.env.DATABASE_URL
+);
 
-  // Point to your entities (compiled .js files in dist for build)
-  entities: [path.join(__dirname, "/**/*.entity{.ts,.js}")],
+export const dataSourceOptions: DataSourceOptions =
+  process.env.NODE_ENV === "production" && process.env.DATABASE_URL
+    ? {
+        // PostgreSQL config for production
+        type: "postgres",
+        url: process.env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false },
+        entities: [path.join(__dirname, "/**/*.entity{.ts,.js}")],
+        migrations: [path.join(__dirname, "/migrations/*.{ts,.js}")],
+        synchronize: false,
+        logging: true,
+      }
+    : {
+        // SQLite config for development
+        type: "sqlite",
+        database: "database.sqlite",
+        entities: [path.join(__dirname, "/**/*.entity{.ts,.js}")],
+        migrations: [path.join(__dirname, "/migrations/*.{ts,.js}")],
+        synchronize: true, // Auto-sync in development only
+        logging: true,
+      };
 
-  // Point to your migration files (compiled .js files in dist for build)
-  migrations: [path.join(__dirname, "/database/migrations/*.{ts,.js}")],
-
-  synchronize: false, // Ensure this is false here too!
-  logging: true,
-};
+console.log("Using database type:", dataSourceOptions.type);
 
 const AppDataSource = new DataSource(dataSourceOptions);
 

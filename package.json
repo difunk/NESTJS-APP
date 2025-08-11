@@ -5,7 +5,8 @@
   "scripts": {
     "lint": "eslint \"src/**/*.ts\"",
     "test": "jest",
-    "build": "tsc && npm run build --prefix quote-react-app",
+    "build": "tsc",
+    "build:full": "tsc && npm run build --prefix quote-react-app",
     "start:dev": "ts-node ./src/main.ts",
     "dev": "nodemon",
     "cli:generate": "nest generate",
@@ -40,6 +41,7 @@
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
+    "pg": "^8.16.3",
     "reflect-metadata": "^0.2.2",
     "sqlite3": "^5.1.7",
     "typeorm": "^0.3.25"

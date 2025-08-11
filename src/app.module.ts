@@ -4,9 +4,10 @@ import { AppService } from "./app.service";
 import { QuoteModule } from "./quotes/quotes.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Quote } from "./quotes/quote.entity";
-import { UsersModule } from './users/users.module';
+import { UsersModule } from "./users/users.module";
 import { User } from "./users/entity/user.entity";
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from "./auth/auth.module";
+import { dataSourceOptions } from "./data-source";
 
 @Module({
   controllers: [AppController],
@@ -14,13 +15,9 @@ import { AuthModule } from './auth/auth.module';
   imports: [
     QuoteModule,
     TypeOrmModule.forRoot({
-      type: "sqlite",
-      database: "database.sqlite",
+      ...dataSourceOptions,
       entities: [Quote, User],
-      synchronize: true,
-      migrations: [__dirname + "/../database/migrations/*.{js,ts}"], // Path to your migration files
-      migrationsRun: false, // Set to true if you want migrations to run on app start (careful in prod!)
-      logging: ["query", "error"],
+      autoLoadEntities: true,
     }),
     UsersModule,
     AuthModule,

@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.git/
+.gitignore
+README.md
+.env
+*.log
+npm-debug.log*
+.nyc_output
+coverage/
+.DS_Store
+.vscode/
+*.md
+database.sqlite
+quote-react-app/node_modules/
+quote-react-app/dist/
+quote-react-app/.env
