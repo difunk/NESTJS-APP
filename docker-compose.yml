@@ -1,0 +1,60 @@
+services:
+  # Backend
+  backend:
+    container_name: backend
+    build: .
+    ports:
+      - "3232:3232"
+    environment:
+      - DATABASE_URL=postgresql://nestjs_user:nestjs_password@postgres:5432/nestjs_db
+      - NODE_ENV=development
+      - JWT_SECRET=R8kXv1mA7f$z2NpG3q#Ld9BvW5eT!kCj
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - nestjs-network
+
+  # PostgreSQL Database
+  postgres:
+    container_name: postgres-db
+    image: postgres:17
+    environment:
+      POSTGRES_DB: nestjs_db
+      POSTGRES_USER: nestjs_user
+      POSTGRES_PASSWORD: nestjs_password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nestjs_user -d nestjs_db"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - nestjs-network
+
+  react-app:
+    build: ./quote-react-app
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:3232
+    volumes:
+      - ./quote-react-app/src:/app/src
+      - ./quote-react-app/public:/app/public
+    depends_on:
+      - backend
+    networks:
+      - nestjs-network
+
+volumes:
+  postgres-data:
+    driver: local
+  uploads-data:
+    driver: local
+
+networks:
+  nestjs-network:
+    driver: bridge
